@@ -1,0 +1,6 @@
+      var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
+      var params = {
+      soapDoc: soapDoc,
+      asyncMode: false
+      };
+      appCtxt.getAppController().sendRequest(params);      
