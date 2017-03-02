@@ -24,7 +24,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
     <include>tk_barrydegraaff_account_history.js</include>
     <include>longtable.js</include>
     <includeCSS>tk_barrydegraaff_account_history.css</includeCSS>
-    <zimletPanelItem label="Account history" icon="accountHistory-panelIcon">
+    <zimletPanelItem label="Account History" icon="accountHistory-panelIcon">
    </zimletPanelItem>
    <handlerObject>tk_barrydegraaff_account_history_HandlerObject</handlerObject>
 </zimlet>
