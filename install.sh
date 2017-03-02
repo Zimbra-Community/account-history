@@ -30,6 +30,37 @@ wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/e
 
 echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
 
+echo "Check if git and zip are installed."
+set +e
+YUM_CMD=$(which yum)
+APT_CMD=$(which apt-get)
+GIT_CMD=$(which git)
+ZIP_CMD=$(which zip)
+set -e 
+
+if [[ -z $GIT_CMD ]] || [[ -z $ZIP_CMD ]]; then
+   if [[ ! -z $YUM_CMD ]]; then
+      yum install -y git zip
+   else
+      apt-get install -y git zip
+   fi
+fi
+
+TMPFOLDER="$(mktemp -d /tmp/accountHistory.XXXXXXXX)"
+echo "Download accountHistory to $TMPFOLDER"
+cd $TMPFOLDER
+git clone https://github.com/Zimbra-Community/account-history
+cd account-history/zimlet
+
+rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history/
+mkdir -p /opt/zimbra/zimlets-deployed/_dev/
+cp -rv tk_barrydegraaff_account_history /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history
+
+rm -Rf $TMPFOLDER
+
 echo "--------------------------------------------------------------------------------------------------------------"
 echo "You still need to restart some services to load the changes:"
 echo "su - zimbra -c \"zmmailboxdctl restart\""
+echo " "
+echo "Do you only see internal IP's? check:"
+echo " https://github.com/Zimbra-Community/account-history#log-external-ip"

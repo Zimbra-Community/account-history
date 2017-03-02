@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT MANUALLY CHANGE THIS FILE
+Please read the documentation.
+-->
+<zimletConfig name="tk_barrydegraaff_account_history" version="1.0"><global>
+<property name="tk_barrydegraaff_account_history_placeholder">false</property>
+</global></zimletConfig>
