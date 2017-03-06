@@ -47,10 +47,21 @@ public class accountHistory extends DocumentHandler {
                     "accountHistoryResponse"
             );
 
-            String[] logs = getLogUris();
-            for (String log : logs) {
-                response = parseLogs(log, account.getName(),response);
+            switch (request.getAttribute("action")) {
+                case "geoIpLookup":
+                    geoIpLookup geoIpLookup = new geoIpLookup();
+                    String result = geoIpLookup.doIPGeoLookup(request.getAttribute("ip"));
+                    Element content = response.addNonUniqueElement("content");
+                    content.addAttribute("geoIpResult", result);
+                    break;
+                case "getLog":
+                    String[] logs = getLogUris();
+                    for (String log : logs) {
+                        response = parseLogs(log, account.getName(), response);
+                    }
+                    break;
             }
+
             return response;
 
         } catch (

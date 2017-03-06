@@ -6,7 +6,7 @@
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
         </element>
-        <element id="module-output" name="accountHistory" />
+        <element id="module-output" name="extension" />
       </element>
     </root>
   </artifact>

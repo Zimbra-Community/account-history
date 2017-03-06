@@ -19,9 +19,37 @@
       <file leaf-file-name="accountHistory.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9">
-              <caret line="51" column="27" lean-forward="false" selection-start-line="51" selection-start-column="27" selection-end-line="51" selection-end-column="27" />
-              <folding />
+            <state relative-caret-position="464">
+              <caret line="50" column="33" lean-forward="false" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="33" />
+              <folding>
+                <element signature="e#0#4609#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="accountHistoryExt.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistoryExt.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="geoIpLookup.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/geoIpLookup.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="47" column="12" lean-forward="false" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#2569#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -47,7 +75,10 @@
         <option value="$PROJECT_DIR$/src/tk/barrydegraaff/logparser/Main.java" />
         <option value="$PROJECT_DIR$/src/tk/barrydegraaff/logparser/accountHistoryExt.java" />
         <option value="$PROJECT_DIR$/src/tk/barrydegraaff/logparser/accountHistory.java" />
+        <option value="$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistoryExt.java" />
+        <option value="$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/GeoIpLookup.java" />
         <option value="$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java" />
+        <option value="$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/geoIpLookup.java" />
       </list>
     </option>
   </component>
@@ -70,37 +101,28 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="accountHistory" />
+              <option name="myItemId" value="extension" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="accountHistory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="accountHistory" />
+              <option name="myItemId" value="extension" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="accountHistory" />
+              <option name="myItemId" value="extension" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="accountHistory" />
+              <option name="myItemId" value="extension" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -114,11 +136,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15917969" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -380,7 +401,16 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/geoIpLookup.java</url>
+          <line>52</line>
+          <properties />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -390,9 +420,63 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="38" column="13" lean-forward="false" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#4609#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/accountHistory.iml">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistoryExt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/geoIpLookup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#2569#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#4609#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#4609#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -402,11 +486,43 @@
     <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/logparser/accountHistoryService.java" />
     <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/logparser/accountHistoryExt.java" />
     <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/logparser/accountHistory.java" />
+    <entry file="file://$PROJECT_DIR$/accountHistory.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/geoIpLookup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="47" column="12" lean-forward="false" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#2569#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistoryExt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/tk/barrydegraaff/accounthistory/accountHistory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9">
-          <caret line="51" column="27" lean-forward="false" selection-start-line="51" selection-start-column="27" selection-end-line="51" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="464">
+          <caret line="50" column="33" lean-forward="false" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#4609#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -464,7 +580,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>accountHistory</last-edited>
+          <last-edited>extension</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -477,7 +593,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>lib</last-edited>
+          <last-edited>lib1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

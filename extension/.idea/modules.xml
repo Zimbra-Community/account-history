@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/accountHistory.iml" filepath="$PROJECT_DIR$/accountHistory.iml" />
+      <module fileurl="file://$PROJECT_DIR$/extension.iml" filepath="$PROJECT_DIR$/extension.iml" />
     </modules>
   </component>
 </project>
