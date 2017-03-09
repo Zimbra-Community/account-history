@@ -26,6 +26,10 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
   border-collapse: collapse;
 }
 
+#historyZimletTable tbody tr {
+cursor: pointer;
+}
+
 .accountHistory-th, .accountHistory-td {
   text-align: left;
   border: 1px solid #cccccc;
@@ -43,11 +47,12 @@ background-color:#fcfcfc;
 .accountHistory-selected {
 background-color:#c1dffe;
 }
-
+/*
 .accountHistory-odd:hover, .accountHistory-even:hover {
     background-color: #c1dffe;
 }
 
 .accountHistory-odd:hover td, .accountHistory-even:hover td{
-    background-color: transparent; /* or #000 */
+    background-color: transparent; 
 }
+*/

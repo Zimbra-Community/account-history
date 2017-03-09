@@ -170,11 +170,10 @@ historyZimlet.prototype.displayDialog = function(response) {
             trclass = 'accountHistory-odd';
          }
          
-         tableData = tableData + "<tr onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\")' class='"+trclass+"'>"+
+         tableData = tableData + "<tr id='historyZimlet"+x+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+x+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px'>"+DOMPurify.sanitize(data[x].date)+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
          "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
-         "<td class='accountHistory-td' style='width:300px'>"+DOMPurify.sanitize(data[x].ua)+ "" + DOMPurify.sanitize(data[x].devicetype)+"</td>"+
          "</td></tr>";
       }
      
@@ -188,12 +187,16 @@ historyZimlet.prototype.displayDialog = function(response) {
       });
       var html = '';
       
-      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'>"+tableData+"</table><div id='historyZimletDetails'></div>";
+      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>Date</th><th class='accountHistory-td'>IP</th><th class='accountHistory-td'>Protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
       
       zimletInstance._dialog.setContent(html);
+      try {
+      var el = document.getElementById('historyZimlet0');
+      el.onclick();
+      } catch (err) {}
       
       var yourTable = document.getElementById('historyZimletTable');
-      longtable(yourTable, {perPage:6});
+      longtable(yourTable, {perPage:8});
       
       zimletInstance._dialog.setButtonListener(DwtDialog.OK_BUTTON, new AjxListener(zimletInstance, zimletInstance.cancelBtn));
       zimletInstance._dialog.setEnterListener(new AjxListener(zimletInstance, zimletInstance.cancelBtn));    
@@ -203,10 +206,25 @@ historyZimlet.prototype.displayDialog = function(response) {
       zimletInstance._dialog.popup();
   };
 
-historyZimlet.prototype.setSelected = function (ip, raw) {
-   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
-   document.getElementById('historyZimletDetails').innerHTML = document.getElementById('historyZimletDetails').innerHTML + "<textarea style='width:790px;'>"+DOMPurify.sanitize(atob(raw))+"</textarea>";
-
+historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
+   console.log(DOMPurify.sanitize(atob(raw)));
+   
+   var oldSelected = document.getElementsByClassName('accountHistory-selected');
+   for (var i = 0; i < oldSelected.length; ++i) 
+   {
+      var item = oldSelected[i];     
+      if (item.id.substring(13) % 2 == 0)
+      {
+         item.className = 'accountHistory-even';
+      }
+      else
+      {
+         item.className = 'accountHistory-odd';
+      }
+   }
+   
+   document.getElementById(domId).className = "accountHistory-selected";
    var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
    var params = {
       soapDoc: soapDoc,
