@@ -28,6 +28,9 @@ fi
 mkdir -p /opt/zimbra/lib/ext/accountHistory
 wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/extension/out/artifacts/accountHistory_jar/accountHistory.jar -O /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
 
+mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
+wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar -O /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
+
 echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
 
 echo "Check if git and zip are installed."
@@ -38,13 +41,16 @@ GIT_CMD=$(which git)
 ZIP_CMD=$(which zip)
 set -e 
 
+#to-do test Ubuntu
 if [[ -z $GIT_CMD ]] || [[ -z $ZIP_CMD ]]; then
    if [[ ! -z $YUM_CMD ]]; then
-      yum install -y git zip
+      yum install -y git zip GeoIP
    else
-      apt-get install -y git zip
+      apt-get install -y git zip geopip-datbase geoipupdate geoip-database-extra
    fi
 fi
+
+geoipupdate
 
 TMPFOLDER="$(mktemp -d /tmp/accountHistory.XXXXXXXX)"
 echo "Download accountHistory to $TMPFOLDER"
