@@ -25,13 +25,13 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-mkdir -p /opt/zimbra/lib/ext/accountHistory
-wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/extension/out/artifacts/accountHistory_jar/accountHistory.jar -O /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
+echo ""
+echo "Do you want to install the client Zimlet and Extension? Y/n:"
+read YNCLIENT;
 
-mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
-wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar -O /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
-
-echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
+echo ""
+echo "Do you want to install the admin Zimlet and Extension? Y/n:"
+read YNADMIN;
 
 echo "Check if git and zip are installed."
 set +e
@@ -50,19 +50,66 @@ if [[ -z $GIT_CMD ]] || [[ -z $ZIP_CMD ]]; then
    fi
 fi
 
-geoipupdate
+# always need this folder
+mkdir -p /opt/zimbra/lib/ext/accountHistory
 
 TMPFOLDER="$(mktemp -d /tmp/accountHistory.XXXXXXXX)"
 echo "Download accountHistory to $TMPFOLDER"
-cd $TMPFOLDER
-git clone https://github.com/Zimbra-Community/account-history
-cd account-history/zimlet
+TMPFOLDER="$(mktemp -d /tmp/webdav-client-installer.XXXXXXXX)"
+echo "Saving existing configuration to $TMPFOLDER/upgrade"
+mkdir $TMPFOLDER/upgrade
+if [ -f /opt/zimbra/lib/ext/accountHistory/config.properties ]; then
+   cp /opt/zimbra/lib/ext/accountHistory/config.properties $TMPFOLDER/upgrade
+else
+   echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
+fi
 
-rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history/
-mkdir -p /opt/zimbra/zimlets-deployed/_dev/
-cp -rv tk_barrydegraaff_account_history /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history
+echo "Installing Client Zimlet."
+if [[ "$YNCLIENT" == 'N' || "$YNCLIENT" == 'n' ]];
+then
+   echo "Skipped per user request."
+else
+   wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/extension/out/artifacts/accountHistory_jar/accountHistory.jar -O /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
+   
+   cd $TMPFOLDER
+   git clone --depth=1 https://github.com/Zimbra-Community/account-history
+   cd account-history/zimlet
+
+   rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history/
+   mkdir -p /opt/zimbra/zimlets-deployed/_dev/
+   cp -rv tk_barrydegraaff_account_history /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history  
+   echo "Flushing Zimlet Cache."
+   su - zimbra -c "zmprov fc all"
+fi
+
+echo "Installing Admin Zimlet."
+if [[ "$YNADMIN" == 'N' || "$YNADMIN" == 'n' ]];
+then
+   echo "Skipped per user request."
+else
+   mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
+   wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar -O /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
+
+   cd $TMPFOLDER
+   git clone --depth=1 https://github.com/Zimbra-Community/account-history
+   cd account-history/adminZimlet
+
+   rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_accounthistory_admin/
+   mkdir -p /opt/zimbra/zimlets-deployed/_dev/
+   cp -rv tk_barrydegraaff_accounthistory_admin /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_accounthistory_admin  
+   echo "Flushing Zimlet Cache."
+   su - zimbra -c "zmprov fc all"
+fi
+
+geoipupdate
+
+echo "Restoring config.properties"
+cd $TMPFOLDER/upgrade/
+wget --no-cache https://github.com/Zimbra-Community/propmigr/raw/master/out/artifacts/propmigr_jar/propmigr.jar
+java -jar $TMPFOLDER/upgrade/propmigr.jar $TMPFOLDER/upgrade/config.properties /opt/zimbra/lib/ext/accountHistory/config.properties
 
 rm -Rf $TMPFOLDER
+
 
 echo "--------------------------------------------------------------------------------------------------------------"
 echo "You still need to restart some services to load the changes:"
