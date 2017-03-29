@@ -207,7 +207,7 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
       ZaAccountHistoryTab.prototype.status(html);
 
       var yourTable = document.getElementById('historyZimletTable');
-      longtable(yourTable, {perPage:15});      
+      longtable(yourTable, {perPage:10});      
 };  
 
 ZaAccountHistoryTab.prototype.status = function (statusText) {
