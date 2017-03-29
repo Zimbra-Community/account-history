@@ -24,7 +24,7 @@ ZaAccountHistoryTab = function(parent, entry) {
     });
     this.setScrollStyle(Dwt.SCROLL);
 
-    var soapDoc = AjxSoapDoc.create("AccountHistory", "urn:AccountHistory", null);
+    var soapDoc = AjxSoapDoc.create("AccountHistoryAdmin", "urn:AccountHistoryAdmin", null);
     soapDoc.getMethod().setAttribute("action", "getAccounts");
     var csfeParams = new Object();
     csfeParams.soapDoc = soapDoc;
@@ -34,9 +34,11 @@ ZaAccountHistoryTab = function(parent, entry) {
     resp = ZaRequestMgr.invoke(csfeParams, reqMgrParams);
 
     document.getElementById('ztab__ACCOUNT_HISTORY').innerHTML = '<div style="padding-left:10px"><h1>Account History</h1>' +
-    'To review the users recent account activity, enter a user account. <br><br><input type="text" id="AccountHistory-account-c" list="AccountHistory-datalist" placeholder="user@domain.com">&nbsp;&nbsp;<button id="AccountHistory-btnLookupLog">OK</button>' +
+    'To review the users recent account activity, enter a user account. <br><br><input type="text" id="AccountHistory-account-c" list="AccountHistory-datalist" placeholder="user@domain.com"><datalist id="AccountHistory-datalist"></datalist>&nbsp;&nbsp;<button id="AccountHistory-btnLookupLog">OK</button>' +
     '<br><br><hr>' +
     '<div id="AccountHistory-status"></div></div>';   
+
+    ZaAccountHistoryTab.prototype.status('Loading auto completion...');
         
     var btnLookupLog = document.getElementById('AccountHistory-btnLookupLog');
     btnLookupLog.onclick = AjxCallback.simpleClosure(this.btnLookupLog);
@@ -57,8 +59,9 @@ ZaAccountHistoryTab.prototype.getTabTitle =
     }
 
 ZaAccountHistoryTab.prototype.getAccountsCallback = function (result) {
+   console.log(result);
    var dataList = document.getElementById('AccountHistory-datalist');
-   var users = result._data.Body.AccountHistoryResponse.AccountHistoryAdminResponse._content.split(";");
+   var users = result._data.Body.AccountHistoryAdminResponse.content[0].accounts.split(";");
    
    users.sort();
    users.forEach(function(item) 

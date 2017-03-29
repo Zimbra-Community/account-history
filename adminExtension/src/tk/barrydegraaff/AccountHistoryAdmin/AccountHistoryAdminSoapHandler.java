@@ -47,6 +47,10 @@ public class AccountHistoryAdminSoapHandler extends DocumentHandler {
             );
 
             switch (request.getAttribute("action")) {
+                case "getAccounts":
+                    Element accounts = response.addNonUniqueElement("content");
+                    accounts.addAttribute("accounts", this.runCommand("/opt/zimbra/bin/zmprov", "-l", "gaa"));
+                    break;
                 case "geoIpLookup":
                     geoIpLookup geoIpLookup = new geoIpLookup();
                     String result = geoIpLookup.doIPGeoLookup(request.getAttribute("ip"));
@@ -145,6 +149,31 @@ public class AccountHistoryAdminSoapHandler extends DocumentHandler {
         }
         return prop.getProperty("audit_logs").split(";");
     }
- 
+
+    private String runCommand(String cmd, String arg1, String arg2) throws ServiceException {
+        try {
+            ProcessBuilder pb = new ProcessBuilder()
+                    .command(cmd, arg1, arg2)
+                    .redirectErrorStream(true);
+            Process p = pb.start();
+
+            BufferedReader cmdOutputBuffer = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            StringBuilder builder = new StringBuilder();
+            String aux = "";
+            while ((aux = cmdOutputBuffer.readLine()) != null) {
+                builder.append(aux);
+                builder.append(';');
+            }
+            String cmdResult = builder.toString();
+            return cmdResult;
+
+        } catch (
+                Exception e)
+
+        {
+            throw ServiceException.FAILURE("AccountHistoryAdminSoapHandler runCommand exception", e);
+        }
+    }
 
 }
