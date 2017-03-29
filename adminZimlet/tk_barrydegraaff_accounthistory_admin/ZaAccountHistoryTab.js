@@ -59,7 +59,6 @@ ZaAccountHistoryTab.prototype.getTabTitle =
     }
 
 ZaAccountHistoryTab.prototype.getAccountsCallback = function (result) {
-   console.log(result);
    var dataList = document.getElementById('AccountHistory-datalist');
    var users = result._data.Body.AccountHistoryAdminResponse.content[0].accounts.split(";");
    
