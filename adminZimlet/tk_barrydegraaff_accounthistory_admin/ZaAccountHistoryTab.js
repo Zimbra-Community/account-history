@@ -36,13 +36,13 @@ ZaAccountHistoryTab = function(parent, entry) {
     document.getElementById('ztab__ACCOUNT_HISTORY').innerHTML = '<div style="padding-left:10px"><h1>Account History</h1>' +
     'To review the users recent account activity, enter a user account. <br><br><input type="text" id="AccountHistory-account-c" list="AccountHistory-datalist" placeholder="user@domain.com"><datalist id="AccountHistory-datalist"></datalist>&nbsp;&nbsp;<button id="AccountHistory-btnLookupLog">OK</button>' +
     '<br><br><hr>' +
-    '<div id="AccountHistory-status"></div></div>';   
+    '<div id="AccountHistory-status"></div><div id="historyZimletDetails"></div></div>';   
 
     ZaAccountHistoryTab.prototype.status('Loading auto completion...');
         
     var btnLookupLog = document.getElementById('AccountHistory-btnLookupLog');
     btnLookupLog.onclick = AjxCallback.simpleClosure(this.btnLookupLog);
-}
+};
 
 
 ZaAccountHistoryTab.prototype = new ZaTabView();
@@ -51,12 +51,12 @@ ZaAccountHistoryTab.prototype.constructor = ZaAccountHistoryTab;
 ZaAccountHistoryTab.prototype.getTabIcon =
     function () {
         return "ClientUpload" ;
-    }
+    };
 
 ZaAccountHistoryTab.prototype.getTabTitle =
     function () {
         return "Account History";
-    }
+    };
 
 ZaAccountHistoryTab.prototype.getAccountsCallback = function (result) {
    var dataList = document.getElementById('AccountHistory-datalist');
@@ -74,7 +74,7 @@ ZaAccountHistoryTab.prototype.getAccountsCallback = function (result) {
    });
    ZaAccountHistoryTab.prototype.status('Ready.');
    return;
-}
+};
 
 ZaAccountHistoryTab.prototype.btnLookupLog = function () {
     ZaAccountHistoryTab.prototype.status('Retrieving logs...');
@@ -97,11 +97,10 @@ ZaAccountHistoryTab.prototype.btnLookupLog = function () {
     {
        ZaAccountHistoryTab.prototype.status('Select or type email address.');
     }
-}   
+};   
   
    
 ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response) {
-   console.log(response);
       var data = [];
       var length = 0;
       try
@@ -194,7 +193,7 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
             trclass = 'accountHistory-odd';
          }
          
-         tableData = tableData + "<tr id='historyZimlet"+x+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+x+"\")' class='"+trclass+"'>"+
+         tableData = tableData + "<tr id='historyZimlet"+x+"' onclick='ZaAccountHistoryTab.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+x+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px'>"+DOMPurify.sanitize(data[x].date)+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
          "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
@@ -214,3 +213,41 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
 ZaAccountHistoryTab.prototype.status = function (statusText) {
    document.getElementById('AccountHistory-status').innerHTML = statusText;
 };
+
+ZaAccountHistoryTab.prototype.setSelected = function (ip, raw, ua, domId) {
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
+   console.log(DOMPurify.sanitize(atob(raw)));
+   
+   var oldSelected = document.getElementsByClassName('accountHistory-selected');
+   for (var i = 0; i < oldSelected.length; ++i) 
+   {
+      var item = oldSelected[i];     
+      if (item.id.substring(13) % 2 == 0)
+      {
+         item.className = 'accountHistory-even';
+      }
+      else
+      {
+         item.className = 'accountHistory-odd';
+      }
+   }
+   
+   document.getElementById(domId).className = "accountHistory-selected";
+   var soapDoc = AjxSoapDoc.create("AccountHistoryAdmin", "urn:AccountHistoryAdmin", null);
+   soapDoc.getMethod().setAttribute("action", "geoIpLookup");
+   soapDoc.getMethod().setAttribute("ip", ip);
+   var csfeParams = new Object();
+   csfeParams.soapDoc = soapDoc;
+   csfeParams.asyncMode = true;
+   csfeParams.callback = new AjxCallback(ZaAccountHistoryTab.prototype.displayIpLookup);
+   var reqMgrParams = {} ;
+   resp = ZaRequestMgr.invoke(csfeParams, reqMgrParams);
+};
+
+ZaAccountHistoryTab.prototype.displayIpLookup = function (response) {
+   response = response._data.Body.AccountHistoryAdminResponse.content[0].geoIpResult;
+   response = response.split(", ");
+   document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
+};
+
+
