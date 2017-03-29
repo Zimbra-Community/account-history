@@ -1,9 +1,18 @@
-# Zimbra Recent Account Activity
+Zimbra Recent Account Activity (beta)
+==========
 A Zimbra extension that allows the user to monitor their recent login and account activity. This is important to keep the user's account safe.
 
-# BETA RELEASE
+If you find Zimbra Recent Account Activity useful and want to support its continued development, you can make donations via:
+- PayPal: info@barrydegraaff.tk
+- Bank transfer: IBAN NL55ABNA0623226413 ; BIC ABNANL2A
 
-[https://fundrazr.com/d1D8Ud](https://fundrazr.com/d1D8Ud)
+Designed for Zimbra version 8.7.
+
+Bugs and feedback: https://github.com/Zimbra-Community/account-history/issues
+
+Report security issues to info@barrydegraaff.tk (PGP fingerprint: 97f4694a1d9aedad012533db725ddd156d36a2d0)
+
+========================================================================
 
 ### Installing
 Use the automated installer:
@@ -11,6 +20,16 @@ Use the automated installer:
     wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/account-history-installer.sh -O /tmp/account-history-installer.sh
     chmod +rx /tmp/account-history-installer.sh
     /tmp/account-history-installer.sh
+
+========================================================================
+
+### Screenshot of Client Zimlet
+![alt tag](https://raw.githubusercontent.com/Zimbra-Community/account-history/master/help/client-zimlet.png)
+
+### Screenshot of Admin Zimlet and extension
+![alt tag](https://raw.githubusercontent.com/Zimbra-Community/account-history/master/help/admin-zimlet.png)
+
+========================================================================
 
 ### Log external ip
 If you only see internal IP's in the account history, you need to configure Zimbra to log the IP from the X-Forwarded-For header.
