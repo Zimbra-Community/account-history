@@ -16,6 +16,14 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 if(appNewUI && ZaSettings){
     if(window.console && window.console.log) console.log("Start loading tk_barrydegraaff_accounthistory_admin.js");
+    
+    //loading css from xml definition file does not work/bug or cache issue?
+    var link = document.createElement('link')
+    link.setAttribute('rel', 'stylesheet')
+    link.setAttribute('type', 'text/css')
+    link.setAttribute('href', '/service/zimlet/tk_barrydegraaff_accounthistory_admin/tk_barrydegraaff_accounthistory_admin.css')
+    document.getElementsByTagName('head')[0].appendChild(link)
+    
     function ZaAccountHistory() {
         ZaItem.call(this,"ZaAccountHistory");
         this._init();

@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
  */
-ZaAccountHistoryTab = function(parent, entry) {
+ZaAccountHistoryTab = function(parent, entry) {  
     if (arguments.length == 0) return;
     ZaTabView.call(this, parent,"ZaAccountHistoryTab");
     ZaTabView.call(this, {
@@ -207,10 +207,8 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
 
       var yourTable = document.getElementById('historyZimletTable');
       longtable(yourTable, {perPage:15});      
-   
-   
-}  
+};  
 
 ZaAccountHistoryTab.prototype.status = function (statusText) {
    document.getElementById('AccountHistory-status').innerHTML = statusText;
-}
+};
