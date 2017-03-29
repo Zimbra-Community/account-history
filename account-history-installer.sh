@@ -55,31 +55,39 @@ mkdir -p /opt/zimbra/lib/ext/accountHistory
 
 TMPFOLDER="$(mktemp -d /tmp/accountHistory.XXXXXXXX)"
 echo "Download accountHistory to $TMPFOLDER"
-TMPFOLDER="$(mktemp -d /tmp/webdav-client-installer.XXXXXXXX)"
+
 echo "Saving existing configuration to $TMPFOLDER/upgrade"
 mkdir $TMPFOLDER/upgrade
 if [ -f /opt/zimbra/lib/ext/accountHistory/config.properties ]; then
    cp /opt/zimbra/lib/ext/accountHistory/config.properties $TMPFOLDER/upgrade
-else
-   echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
-fi
+fi 
+
+echo "Remove existing accountHistory."
+rm -Rf /opt/zimbra/lib/ext/accountHistory
+rm -Rf /opt/zimbra/lib/ext/AccountHistoryAdmin
+rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history  
+mkdir -p /opt/zimbra/lib/ext/accountHistory
+echo "audit_logs=/opt/zimbra/log/audit.log" > /opt/zimbra/lib/ext/accountHistory/config.properties
+
+cd $TMPFOLDER
+git clone --depth=1 https://github.com/Zimbra-Community/account-history
 
 echo "Installing Client Zimlet."
 if [[ "$YNCLIENT" == 'N' || "$YNCLIENT" == 'n' ]];
 then
    echo "Skipped per user request."
 else
-   wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/extension/out/artifacts/accountHistory_jar/accountHistory.jar -O /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
-   
+   echo "Deploy client Zimlet"
    cd $TMPFOLDER
-   git clone --depth=1 https://github.com/Zimbra-Community/account-history
    cd account-history/zimlet
 
    rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history/
    mkdir -p /opt/zimbra/zimlets-deployed/_dev/
    cp -rv tk_barrydegraaff_account_history /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history  
-   echo "Flushing Zimlet Cache."
-   su - zimbra -c "zmprov fc all"
+  
+   echo "Deploy client extension"
+   cd $TMPFOLDER
+   cp account-history/extension/out/artifacts/accountHistory_jar/accountHistory.jar /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
 fi
 
 echo "Installing Admin Zimlet."
@@ -87,21 +95,28 @@ if [[ "$YNADMIN" == 'N' || "$YNADMIN" == 'n' ]];
 then
    echo "Skipped per user request."
 else
-   mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
-   wget --no-cache https://github.com/Zimbra-Community/account-history/raw/master/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar -O /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
+   echo "Deploy admin Zimlet"
+   su - zimbra -c "zmzimletctl undeploy tk_barrydegraaff_accounthistory_admin"
+   rm -f /tmp/tk_barrydegraaff_accounthistory_admin.zip
 
    cd $TMPFOLDER
-   git clone --depth=1 https://github.com/Zimbra-Community/account-history
-   cd account-history/adminZimlet
-
-   rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_accounthistory_admin/
-   mkdir -p /opt/zimbra/zimlets-deployed/_dev/
-   cp -rv tk_barrydegraaff_accounthistory_admin /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_accounthistory_admin  
-   echo "Flushing Zimlet Cache."
-   su - zimbra -c "zmprov fc all"
+   cd account-history/adminZimlet/tk_barrydegraaff_accounthistory_admin/
+   zip -r /tmp/tk_barrydegraaff_accounthistory_admin.zip *
+   su - zimbra -c "zmzimletctl deploy /tmp/tk_barrydegraaff_accounthistory_admin.zip" 
+   
+   echo "Deploy Admin server extension"
+   mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
+   cd $TMPFOLDER
+   cp account-history/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
 fi
 
+echo "Flushing Zimlet Cache."
+su - zimbra -c "zmprov fc all"
+
+# if no update is found, the script would not continue running
+set +e
 geoipupdate
+set -e
 
 echo "Restoring config.properties"
 cd $TMPFOLDER/upgrade/
@@ -112,6 +127,7 @@ rm -Rf $TMPFOLDER
 
 
 echo "--------------------------------------------------------------------------------------------------------------"
+echo "Zimbra Account History installed successful."
 echo "You still need to restart some services to load the changes:"
 echo "su - zimbra -c \"zmmailboxdctl restart\""
 echo " "
