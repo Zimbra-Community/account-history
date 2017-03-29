@@ -37,18 +37,15 @@ echo "Check if git and zip are installed."
 set +e
 YUM_CMD=$(which yum)
 APT_CMD=$(which apt-get)
-GIT_CMD=$(which git)
-ZIP_CMD=$(which zip)
 set -e 
 
 #to-do test Ubuntu
-if [[ -z $GIT_CMD ]] || [[ -z $ZIP_CMD ]]; then
-   if [[ ! -z $YUM_CMD ]]; then
-      yum install -y git zip GeoIP
-   else
-      apt-get install -y git zip geopip-datbase geoipupdate geoip-database-extra
-   fi
+if [[ ! -z $YUM_CMD ]]; then
+   yum install -y git zip GeoIP
+else
+   apt-get install -y git zip geoip-database geoip-bin
 fi
+
 
 # always need this folder
 mkdir -p /opt/zimbra/lib/ext/accountHistory
@@ -113,9 +110,17 @@ fi
 echo "Flushing Zimlet Cache."
 su - zimbra -c "zmprov fc all"
 
-# if no update is found, the script would not continue running
 set +e
-geoipupdate
+echo "Updating GeoIP"
+if [[ ! -z $APT_CMD ]]; then
+   cd $TMPFOLDER
+   wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+   gunzip GeoLiteCity.dat.gz
+   mv GeoLiteCity.dat /usr/share/GeoIP/
+else
+   # if no update is found, the script would not continue running in set -e
+   geoipupdate
+fi
 set -e
 
 echo "Restoring config.properties"
