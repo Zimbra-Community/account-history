@@ -43,7 +43,7 @@ set -e
 if [[ ! -z $YUM_CMD ]]; then
    yum install -y git zip GeoIP
 else
-   apt-get install -y git zip geoip-database geoip-bin
+   apt-get install -y git zip geoip-database geoip-bin default-jdk
 fi
 
 
