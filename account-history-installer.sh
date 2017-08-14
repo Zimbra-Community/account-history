@@ -41,7 +41,7 @@ set -e
 
 #to-do test Ubuntu
 if [[ ! -z $YUM_CMD ]]; then
-   yum install -y git zip GeoIP
+   yum install -y git zip GeoIP java
 else
    apt-get install -y git zip geoip-database geoip-bin default-jdk
 fi
