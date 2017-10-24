@@ -24,17 +24,16 @@ import com.zimbra.soap.DocumentHandler;
 import com.zimbra.soap.ZimbraSoapContext;
 import com.zimbra.cs.account.Account;
 
+import java.io.*;
 import java.util.Map;
 
-import java.io.FileInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Properties;
+import java.util.zip.GZIPInputStream;
 
 public class accountHistory extends DocumentHandler {
 
@@ -73,11 +72,23 @@ public class accountHistory extends DocumentHandler {
     private Element parseLogs(String logUri, String userName, Element response) {
 
         String strLine;
+        BufferedReader br;
+        FileInputStream fstream;
         try {
-
-            FileInputStream fstream = new FileInputStream(logUri);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-
+            //Support gz files syntax: /opt/zimbra/log/audit.log.yyyy-MM-dd.gz
+            //for now it only supports reading yesterday, to-do add number of days to read
+            if (logUri.substring(logUri.length() - 3).equals(".gz")) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date yesterday = new Date(System.currentTimeMillis() - 1000L * 60L * 60L * 24L);
+                InputStream fileStream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
+                fstream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
+                InputStream gzipStream = new GZIPInputStream(fileStream);
+                Reader decoder = new InputStreamReader(gzipStream, "UTF-8");
+                br = new BufferedReader(decoder);
+            } else {
+                fstream = new FileInputStream(logUri);
+                br = new BufferedReader(new InputStreamReader(fstream));
+            }
             while ((strLine = br.readLine()) != null) {
                 String[] columns = strLine.split(" ", 6);
 
@@ -115,7 +126,6 @@ public class accountHistory extends DocumentHandler {
                 content.addAttribute("logEntry", strLine);
             }
             fstream.close();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

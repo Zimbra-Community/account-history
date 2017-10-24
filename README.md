@@ -48,3 +48,8 @@ Support a comma separated list of log files, only the audit.og log4j format is s
 
     nano /opt/zimbra/lib/ext/accountHistory/config.properties
     audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/sync.log
+    
+You can also have the extension read gzipped files (after log rotation), for now, it only reads yesterdays gz log.    
+
+    nano /opt/zimbra/lib/ext/accountHistory/config.properties
+    audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/audit.log.yyyy-MM-dd.gz

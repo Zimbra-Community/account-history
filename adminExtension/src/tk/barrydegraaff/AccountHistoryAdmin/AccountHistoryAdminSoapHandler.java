@@ -18,6 +18,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 package tk.barrydegraaff.AccountHistoryAdmin;
 
+import java.io.*;
 import java.util.Map;
 
 import com.zimbra.common.service.ServiceException;
@@ -27,14 +28,12 @@ import com.zimbra.soap.ZimbraSoapContext;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
-import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.zip.GZIPInputStream;
 
 public class AccountHistoryAdminSoapHandler extends DocumentHandler {
     public Element handle(Element request, Map<String, Object> context)
@@ -90,10 +89,23 @@ public class AccountHistoryAdminSoapHandler extends DocumentHandler {
     private Element parseLogs(String logUri, String userName, Element response) {
 
         String strLine;
+        BufferedReader br;
+        FileInputStream fstream;
         try {
-
-            FileInputStream fstream = new FileInputStream(logUri);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            //Support gz files syntax: /opt/zimbra/log/audit.log.yyyy-MM-dd.gz
+            //for now it only supports reading yesterday, to-do add number of days to read
+            if (logUri.substring(logUri.length() - 3).equals(".gz")) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date yesterday = new Date(System.currentTimeMillis() - 1000L * 60L * 60L * 24L);
+                InputStream fileStream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
+                fstream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
+                InputStream gzipStream = new GZIPInputStream(fileStream);
+                Reader decoder = new InputStreamReader(gzipStream, "UTF-8");
+                br = new BufferedReader(decoder);
+            } else {
+                fstream = new FileInputStream(logUri);
+                br = new BufferedReader(new InputStreamReader(fstream));
+            }
 
             while ((strLine = br.readLine()) != null) {
                 String[] columns = strLine.split(" ", 6);
