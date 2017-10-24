@@ -97,9 +97,8 @@ public class AccountHistoryAdminSoapHandler extends DocumentHandler {
             if (logUri.substring(logUri.length() - 3).equals(".gz")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date yesterday = new Date(System.currentTimeMillis() - 1000L * 60L * 60L * 24L);
-                InputStream fileStream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
                 fstream = new FileInputStream(logUri.replace("yyyy-MM-dd",sdf.format(yesterday)));
-                InputStream gzipStream = new GZIPInputStream(fileStream);
+                InputStream gzipStream = new GZIPInputStream(fstream);
                 Reader decoder = new InputStreamReader(gzipStream, "UTF-8");
                 br = new BufferedReader(decoder);
             } else {
@@ -143,6 +142,7 @@ public class AccountHistoryAdminSoapHandler extends DocumentHandler {
                 Element content = response.addNonUniqueElement("content");
                 content.addAttribute("logEntry", strLine);
             }
+            br.close();
             fstream.close();
 
         } catch (Exception e) {
