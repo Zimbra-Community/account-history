@@ -181,15 +181,39 @@ historyZimlet.prototype.displayDialog = function(response) {
          }
          else
          {
-            parsed['protocol'] = "";
+            var protocol = /model=.*?;/.exec(data[x]);
+            if(protocol)
+            {
+              parsed['protocol'] = protocol[0].replace(/model=|;/g,"").toLowerCase(); 
+            }
+            else
+            {
+               parsed['protocol'] = "";
+            }
          }
-                  
-         data[x]= parsed;
+         if((parsed['oip']!=="")&&(parsed['protocol']!==""))        
+         {
+            data[x]= parsed;
+         }
+         else
+         {
+            data[x]="";
+         }
       }      
-      
+      var x=0;
+      var cleandata=[];
+      data.forEach(function(element) {
+         if(element!=="")
+         {
+            cleandata[x]=element;
+            x++;
+         }
+      });
+
+      data = cleandata;
       //render table data
       var tableData = "";
-      for(var x=0; x < length; x++)
+      for(var x=0; x < data.length; x++)
       {
          var trclass = '';
          if (x % 2 == 0)
