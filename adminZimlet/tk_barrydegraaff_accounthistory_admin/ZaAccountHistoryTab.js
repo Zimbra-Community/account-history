@@ -205,7 +205,7 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
       data = cleandata;
       //render table data
       var tableData = "";
-      for(var x=0; x < length; x++)
+      for(var x=0; x < data.length; x++)
       {
          var trclass = '';
          if (x % 2 == 0)
