@@ -209,7 +209,7 @@ historyZimlet.prototype.displayDialog = function(response) {
             x++;
          }
       });
-console.log(cleandata);
+
       var lessdata={};
       cleandata.forEach(function(element) {
          if(element!=="")
