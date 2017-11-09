@@ -288,7 +288,7 @@ historyZimlet.prototype.displayDialog = function(response) {
   };
 
 historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
-   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><b>Log:</b><br>'+DOMPurify.sanitize(atob(raw))+'</small>';
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><b>Details:</b><br>'+DOMPurify.sanitize(atob(raw))+'</small>';
    
    var oldSelected = document.getElementsByClassName('accountHistory-selected');
    for (var i = 0; i < oldSelected.length; ++i) 
