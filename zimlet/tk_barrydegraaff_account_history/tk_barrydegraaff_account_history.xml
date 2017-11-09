@@ -17,15 +17,19 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
 -->
 <zimlet name="tk_barrydegraaff_account_history"
-        version="0.0.5"
+        version="0.0.6"
         target="main"
         label="Account History"
         description="Allows the user to monitor their recent login and account activity.">
     <include>tk_barrydegraaff_account_history.js</include>
     <include>longtable.js</include>
     <include>purify.js</include>
+    <include>sorttable.js</include>
     <includeCSS>tk_barrydegraaff_account_history.css</includeCSS>
     <zimletPanelItem label="Account History" icon="accountHistory-panelIcon">
+      <contextMenu>
+         <menuItem icon="accountHistory" label="Full log" id="full" />
+      </contextMenu>       
    </zimletPanelItem>
    <handlerObject>tk_barrydegraaff_account_history_HandlerObject</handlerObject>
 </zimlet>

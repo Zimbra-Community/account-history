@@ -129,6 +129,254 @@ historyZimlet.prototype.displayDialog = function(response) {
          newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
       }
       newData.sort();
+     // newData.reverse();
+      data = newData;
+      newData = "";
+       
+      //parse log with regex     
+      for(var x=0; x < length; x++)
+      {
+         parsed = [];         
+         parsed['raw'] = data[x];
+         parsed['date'] = data[x].substring(18,37);
+
+         var oip = /oip=.*?;/.exec(data[x]);
+         if(oip)
+         {
+            if(oip[0].indexOf(',')>0)
+            {
+               oip[0] = oip[0].substring(0,oip[0].indexOf(','));
+            }
+            parsed['oip'] = oip[0].replace(/oip=|;/g,"");   
+         }
+         else
+         {
+            parsed['oip'] = "";
+         }
+         
+         var ua = /ua=.*?;/.exec(data[x].replace(/;;/g,""));
+         if(ua)
+         {
+            parsed['ua'] = ua[0].replace(/ua=|;/g,"");   
+         }
+         else
+         {
+            parsed['ua'] = "";
+         }
+
+         var DeviceType = /DeviceType=.*?&/.exec(data[x]);
+         if(DeviceType)
+         {
+            parsed['devicetype'] = DeviceType[0].replace(/DeviceType=|&/g,"");   
+         }
+         else
+         {
+            parsed['devicetype'] = "";
+         }         
+
+         var protocol = /protocol=.*?;/.exec(data[x]);
+         if(protocol)
+         {
+            parsed['protocol'] = protocol[0].replace(/protocol=|;/g,"");   
+         }
+         else
+         {
+            var protocol = /model=.*?;/.exec(data[x]);
+            if(protocol)
+            {
+              parsed['protocol'] = protocol[0].replace(/model=|;/g,"").toLowerCase(); 
+            }
+            else
+            {
+               parsed['protocol'] = "";
+            }
+         }
+         if((parsed['oip']!=="")&&(parsed['protocol']!==""))        
+         {
+            data[x]= parsed;
+         }
+         else
+         {
+            data[x]="";
+         }
+      }      
+      var x=0;
+      var cleandata=[];
+      data.forEach(function(element) {
+         if(element!=="")
+         {
+            cleandata[x]=element;
+            x++;
+         }
+      });
+console.log(cleandata);
+      var lessdata={};
+      cleandata.forEach(function(element) {
+         if(element!=="")
+         {
+            lessdata[element['oip']+element['protocol']]=element;
+         }
+      });
+
+      var lessdatafmt=[];
+      var x=0;
+
+      for (var key in lessdata) {
+      // skip loop if the property is from prototype
+      if (!lessdata.hasOwnProperty(key)) continue;
+         lessdatafmt[lessdata[key].date]=lessdata[key];
+         x++;
+      }
+      lessdatafmt.sort();
+      lessdatafmt.reverse();
+
+      var lessdatafinal=[];
+      var x=0;
+      for (var key in lessdatafmt) {
+      // skip loop if the property is from prototype
+      if (!lessdatafmt.hasOwnProperty(key)) continue;
+         lessdatafinal[x]=lessdatafmt[key];
+         x++;
+      }    
+      data = lessdatafinal;
+
+      //render table data
+      var tableData = "";
+      for(var x=0; x < data.length; x++)
+      {
+         tableData = tableData + "<tr id='historyZimlet"+x+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+x+"\")'>"+
+         "<td class='accountHistory-td' style='width:120px'>"+DOMPurify.sanitize(data[x].date)+"</td>"+
+         "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
+         "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
+         "</td></tr>";
+      }
+     
+      var zimletInstance = appCtxt._zimletMgr.getZimletByName('tk_barrydegraaff_account_history').handlerObject;
+      
+      zimletInstance._dialog = new ZmDialog({
+         title: "Account History",
+         parent: zimletInstance.getShell(),
+         standardButtons: [DwtDialog.OK_BUTTON],
+         disposeOnPopDown: true
+      });
+      var html = '';
+      
+      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>Date</th><th class='accountHistory-td'>IP</th><th class='accountHistory-td'>Protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
+      
+      zimletInstance._dialog.setContent(html);
+      
+      var yourTable = document.getElementById('historyZimletTable');
+      longtable(yourTable, {perPage:8});
+      
+      sorttable.makeSortable(document.getElementById('historyZimletTable'));
+      var myTH = document.getElementsByTagName("th")[0];
+      sorttable.innerSortFunction.apply(myTH, []);
+      
+      var contents = document.getElementById('historyZimletTable').innerHTML;
+      var select = contents.substring(contents.indexOf('historyZimlet')+13, contents.indexOf('historyZimlet')+14);
+      try {
+      var el = document.getElementById('historyZimlet'+select);
+      el.onclick();
+      } catch (err) {}
+      
+      zimletInstance._dialog.setButtonListener(DwtDialog.OK_BUTTON, new AjxListener(zimletInstance, zimletInstance.cancelBtn));
+      zimletInstance._dialog.setEnterListener(new AjxListener(zimletInstance, zimletInstance.cancelBtn));    
+      zimletInstance._dialog._setAllowSelection();
+      document.getElementById(zimletInstance._dialog.__internalId+'_handle').style.backgroundColor = '#eeeeee';
+      document.getElementById(zimletInstance._dialog.__internalId+'_title').style.textAlign = 'center';
+      zimletInstance._dialog.popup();
+  };
+
+historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
+   console.log(DOMPurify.sanitize(atob(raw)));
+   
+   var oldSelected = document.getElementsByClassName('accountHistory-selected');
+   for (var i = 0; i < oldSelected.length; ++i) 
+   {
+      var item = oldSelected[i];     
+      if (item.id.substring(13) % 2 == 0)
+      {
+         item.className = 'accountHistory-even';
+      }
+      else
+      {
+         item.className = 'accountHistory-odd';
+      }
+   }
+   
+   document.getElementById(domId).className = "accountHistory-selected";
+   var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
+   var params = {
+      soapDoc: soapDoc,
+      asyncMode: true,
+      callback:this.displayIpLookup
+   };
+   soapDoc.getMethod().setAttribute("action", "geoIpLookup");
+   soapDoc.getMethod().setAttribute("ip", ip);
+   appCtxt.getAppController().sendRequest(params);   
+}
+
+historyZimlet.prototype.displayIpLookup = function (response) {
+   response = response._data.accountHistoryResponse.content[0].geoIpResult;
+   response = response.split(", ");
+   document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
+}
+
+/* This method is called when the dialog "CANCEL" button is clicked
+ */
+historyZimlet.prototype.cancelBtn =
+  function() {
+    try{
+      this._dialog.setContent('');
+      this._dialog.popdown();
+    }
+    catch (err) {
+    }
+  };
+
+historyZimlet.prototype.menuItemSelected =
+function(itemId) {
+   var zimletInstance = appCtxt._zimletMgr.getZimletByName('tk_barrydegraaff_zimbra_openpgp').handlerObject;
+   switch (itemId) {
+   case "full":
+      var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
+      var params = {
+         soapDoc: soapDoc,
+         asyncMode: true,
+         callback:this.displayDialogFullLog
+      };
+      soapDoc.getMethod().setAttribute("action", "getLog");
+      appCtxt.getAppController().sendRequest(params);
+      break;
+   }
+};
+
+/**
+ * Display the settings dialog.
+ * @param {number} id Dialog ID for the zimlet.
+ */
+historyZimlet.prototype.displayDialogFullLog = function(response) {
+      var data = [];
+      var length = 0;
+      try
+      {
+         data = response._data.accountHistoryResponse.content;
+         length = response._data.accountHistoryResponse.content.length;
+      }
+      catch(err)
+      {
+         historyZimlet.prototype.status("No data received from server", ZmStatusView.LEVEL_WARNING);
+         return;
+      }
+      
+      //add unix time to log for sorting
+      var newData = [];
+      for(var x=0; x < length; x++)
+      {
+         newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
+      }
+      newData.sort();
       newData.reverse();
       data = newData;
       newData = "";
@@ -259,52 +507,4 @@ historyZimlet.prototype.displayDialog = function(response) {
       document.getElementById(zimletInstance._dialog.__internalId+'_handle').style.backgroundColor = '#eeeeee';
       document.getElementById(zimletInstance._dialog.__internalId+'_title').style.textAlign = 'center';
       zimletInstance._dialog.popup();
-  };
-
-historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
-   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
-   console.log(DOMPurify.sanitize(atob(raw)));
-   
-   var oldSelected = document.getElementsByClassName('accountHistory-selected');
-   for (var i = 0; i < oldSelected.length; ++i) 
-   {
-      var item = oldSelected[i];     
-      if (item.id.substring(13) % 2 == 0)
-      {
-         item.className = 'accountHistory-even';
-      }
-      else
-      {
-         item.className = 'accountHistory-odd';
-      }
-   }
-   
-   document.getElementById(domId).className = "accountHistory-selected";
-   var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
-   var params = {
-      soapDoc: soapDoc,
-      asyncMode: true,
-      callback:this.displayIpLookup
-   };
-   soapDoc.getMethod().setAttribute("action", "geoIpLookup");
-   soapDoc.getMethod().setAttribute("ip", ip);
-   appCtxt.getAppController().sendRequest(params);   
-}
-
-historyZimlet.prototype.displayIpLookup = function (response) {
-   response = response._data.accountHistoryResponse.content[0].geoIpResult;
-   response = response.split(", ");
-   document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
-}
-
-/* This method is called when the dialog "CANCEL" button is clicked
- */
-historyZimlet.prototype.cancelBtn =
-  function() {
-    try{
-      this._dialog.setContent('');
-      this._dialog.popdown();
-    }
-    catch (err) {
-    }
   };
