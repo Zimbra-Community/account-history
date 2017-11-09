@@ -288,8 +288,7 @@ historyZimlet.prototype.displayDialog = function(response) {
   };
 
 historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
-   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
-   console.log(DOMPurify.sanitize(atob(raw)));
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><b>Log:</b><br>'+DOMPurify.sanitize(atob(raw))+'</small>';
    
    var oldSelected = document.getElementsByClassName('accountHistory-selected');
    for (var i = 0; i < oldSelected.length; ++i) 
@@ -318,7 +317,7 @@ historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
 }
 
 historyZimlet.prototype.displayIpLookup = function (response) {
-   response = response._data.accountHistoryResponse.content[0].geoIpResult;
+   response = response.    _data.accountHistoryResponse.content[0].geoIpResult;
    response = response.split(", ");
    document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
 }
