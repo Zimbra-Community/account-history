@@ -28,7 +28,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
     <includeCSS>tk_barrydegraaff_account_history.css</includeCSS>
     <zimletPanelItem label="Account History" icon="accountHistory-panelIcon">
       <contextMenu>
-         <menuItem icon="accountHistory" label="Full log" id="full" />
+         <menuItem icon="accountHistory-panelIcon" label="Full log" id="full" />
       </contextMenu>       
    </zimletPanelItem>
    <handlerObject>tk_barrydegraaff_account_history_HandlerObject</handlerObject>
