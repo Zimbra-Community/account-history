@@ -268,10 +268,6 @@ historyZimlet.prototype.displayDialog = function(response) {
       var yourTable = document.getElementById('historyZimletTable');
       longtable(yourTable, {perPage:8});
       
-      sorttable.makeSortable(document.getElementById('historyZimletTable'));
-      var myTH = document.getElementsByTagName("th")[0];
-      sorttable.innerSortFunction.apply(myTH, []);
-      
       var contents = document.getElementById('historyZimletTable').innerHTML;
       var select = contents.substring(contents.indexOf('historyZimlet')+13, contents.indexOf('historyZimlet')+14);
       try {
@@ -285,6 +281,15 @@ historyZimlet.prototype.displayDialog = function(response) {
       document.getElementById(zimletInstance._dialog.__internalId+'_handle').style.backgroundColor = '#eeeeee';
       document.getElementById(zimletInstance._dialog.__internalId+'_title').style.textAlign = 'center';
       zimletInstance._dialog.popup();
+      try {
+         sorttable.makeSortable(document.getElementById('historyZimletTable'));
+         var myTH = document.getElementsByTagName("th")[0];
+         sorttable.innerSortFunction.apply(myTH, []);
+      }
+      catch(err)
+      {
+         
+      }
   };
 
 historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
