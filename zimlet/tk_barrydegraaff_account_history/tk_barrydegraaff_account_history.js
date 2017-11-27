@@ -315,7 +315,13 @@ historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
 historyZimlet.prototype.displayIpLookup = function (response) {
    response = response.    _data.accountHistoryResponse.content[0].geoIpResult;
    response = response.split(", ");
-   document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
+   var OSMBbox = 0.03;
+   var minlong = parseFloat(response[7]) - OSMBbox;
+   var minlat  = parseFloat(response[6]) - OSMBbox;
+   var maxlong = parseFloat(response[7]) + OSMBbox;
+   var maxlat  = parseFloat(response[6]) + OSMBbox;
+   //document.getElementById('historyZimletMap').src="https://www.bing.com/maps/embed/viewer.aspx?v=3&cp="+response[6]+"~"+response[7]+"&w=800&h=300&lvl=12&sty=r&typ=d&pp=&ps=&dir=0&mkt=nl-nl&src=SHELL&form=BMEMJS";
+   document.getElementById('historyZimletMap').src="https://www.openstreetmap.org/export/embed.html?bbox="+minlong+"%2C"+minlat+"%2C"+maxlong+"%2C"+maxlat;
 }
 
 /* This method is called when the dialog "CANCEL" button is clicked
