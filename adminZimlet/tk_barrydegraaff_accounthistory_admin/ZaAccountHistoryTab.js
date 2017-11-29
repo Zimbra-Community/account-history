@@ -239,7 +239,7 @@ ZaAccountHistoryTab.prototype.status = function (statusText) {
 };
 
 ZaAccountHistoryTab.prototype.setSelected = function (ip, raw, ua, domId) {
-   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>User Agent:</b><br>'+DOMPurify.sanitize(atob(ua))+'</pre></small>';
+   document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><pre><b>Details:</b><br>'+DOMPurify.sanitize(atob(raw))+'</pre></small>';
    console.log(DOMPurify.sanitize(atob(raw)));
    
    var oldSelected = document.getElementsByClassName('accountHistory-selected');
