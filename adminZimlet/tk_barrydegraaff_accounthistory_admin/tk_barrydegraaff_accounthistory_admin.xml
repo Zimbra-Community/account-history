@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 -->
-<zimlet name="tk_barrydegraaff_accounthistory_admin" version="0.0.8" label="Account history" description="Account history" extension="true">
+<zimlet name="tk_barrydegraaff_accounthistory_admin" version="0.1.0" label="Account history" description="Account history" extension="true">
     <include>tk_barrydegraaff_accounthistory_admin.js</include>
     <include>ZaAccountHistoryViewController.js</include>
     <include>ZaAccountHistoryTab.js</include>

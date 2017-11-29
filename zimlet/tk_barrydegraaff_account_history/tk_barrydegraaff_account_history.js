@@ -232,24 +232,44 @@ historyZimlet.prototype.displayDialog = function(response) {
 
       var lessdatafinal=[];
       var x=0;
+      var sortedKeys = [];
       for (var key in lessdatafmt) {
       // skip loop if the property is from prototype
       if (!lessdatafmt.hasOwnProperty(key)) continue;
-         lessdatafinal[x]=lessdatafmt[key];
+         sortedKeys.push(key);
          x++;
       }    
-      data = lessdatafinal;
+      sortedKeys.sort();
+      sortedKeys.reverse();
+
+      data = lessdatafmt;
 
       //render table data
       var tableData = "";
-      for(var x=0; x < data.length; x++)
+      var rowCount = 0;
+      sortedKeys.forEach(function(x)
       {
-         tableData = tableData + "<tr id='historyZimlet"+x+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+x+"\")'>"+
+         var trclass = '';
+         if (rowCount % 2 == 0)
+         {
+            trclass = 'accountHistory-even';
+         }
+         else
+         {
+            trclass = 'accountHistory-odd';
+         }
+         if(rowCount == 0)         
+         {
+            trclass = 'accountHistory-selected';
+         }
+         
+         tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px'>"+DOMPurify.sanitize(data[x].date)+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
          "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
          "</td></tr>";
-      }
+         rowCount++;
+      });
      
       var zimletInstance = appCtxt._zimletMgr.getZimletByName('tk_barrydegraaff_account_history').handlerObject;
       
@@ -285,7 +305,7 @@ historyZimlet.prototype.displayDialog = function(response) {
 
 historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
    document.getElementById('historyZimletDetails').innerHTML = '<iframe id="historyZimletMap" style="border: 0;" src="" width="800" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe><small><b>Details:</b><br>'+DOMPurify.sanitize(atob(raw))+'</small>';
-   
+
    var oldSelected = document.getElementsByClassName('accountHistory-selected');
    for (var i = 0; i < oldSelected.length; ++i) 
    {
@@ -299,7 +319,7 @@ historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
          item.className = 'accountHistory-odd';
       }
    }
-   
+
    document.getElementById(domId).className = "accountHistory-selected";
    var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
    var params = {
