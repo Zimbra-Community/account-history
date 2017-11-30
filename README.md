@@ -44,7 +44,7 @@ If you only see internal IP's in the account history, you need to configure Zimb
     
 
 ### Configuring preferences
-Support a comma separated list of log files, only the audit.og log4j format is supported.
+Support a semi-colon separated list of log files, only the audit.og log4j format is supported.
 
     nano /opt/zimbra/lib/ext/accountHistory/config.properties
     audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/sync.log
