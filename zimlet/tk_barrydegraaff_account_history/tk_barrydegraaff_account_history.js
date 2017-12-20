@@ -111,17 +111,20 @@ function(loc) {
 historyZimlet.prototype.displayDialog = function(response) {
       var data = [];
       var length = 0;
+      var serverTime = "";
       try
       {
          data = response._data.accountHistoryResponse.content;
          length = response._data.accountHistoryResponse.content.length;
+         serverTime = Date.parse(response._data.accountHistoryResponse.serverMeta.time.substring(0,19));
+         
       }
       catch(err)
       {
          historyZimlet.prototype.status("No data received from server", ZmStatusView.LEVEL_WARNING);
          return;
       }
-      
+
       //add unix time to log for sorting
       var newData = [];
       for(var x=0; x < length; x++)
@@ -263,8 +266,9 @@ historyZimlet.prototype.displayDialog = function(response) {
             trclass = 'accountHistory-selected';
          }
          
+         var dateDiff = serverTime - Date.parse(data[x].date.substring(0,19));
          tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
-         "<td class='accountHistory-td' style='width:120px'>"+DOMPurify.sanitize(data[x].date)+"</td>"+
+         "<td class='accountHistory-td' style='width:120px' title='"+DOMPurify.sanitize(data[x].date)+"'>"+historyZimlet.prototype.timeSince(dateDiff)+" ago"+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
          "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
          "</td></tr>";
@@ -281,7 +285,7 @@ historyZimlet.prototype.displayDialog = function(response) {
       });
       var html = '';
       
-      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>Date</th><th class='accountHistory-td'>IP</th><th class='accountHistory-td'>Protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
+      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>When</th><th class='accountHistory-td'>From what IP</th><th class='accountHistory-td'>Form what device or protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
       
       zimletInstance._dialog.setContent(html);
       
@@ -358,7 +362,7 @@ historyZimlet.prototype.cancelBtn =
 
 historyZimlet.prototype.menuItemSelected =
 function(itemId) {
-   var zimletInstance = appCtxt._zimletMgr.getZimletByName('tk_barrydegraaff_zimbra_openpgp').handlerObject;
+   var zimletInstance = appCtxt._zimletMgr.getZimletByName('tk_barrydegraaff_account_history').handlerObject;
    switch (itemId) {
    case "full":
       var soapDoc = AjxSoapDoc.create("accountHistory", "urn:accountHistory", null);
@@ -529,3 +533,33 @@ historyZimlet.prototype.displayDialogFullLog = function(response) {
       document.getElementById(zimletInstance._dialog.__internalId+'_title').style.textAlign = 'center';
       zimletInstance._dialog.popup();
   };
+
+/* https://stackoverflow.com/questions/3177836/how-to-format-time-since-xxx-e-g-4-minutes-ago-similar-to-stack-exchange-site
+ */
+historyZimlet.prototype.timeSince = function(seconds) {
+
+  seconds = seconds / 1000;
+
+  var interval = Math.floor(seconds / 31536000);
+
+  if (interval > 1) {
+    return interval + " years";
+  }
+  interval = Math.floor(seconds / 2592000);
+  if (interval > 1) {
+    return interval + " months";
+  }
+  interval = Math.floor(seconds / 86400);
+  if (interval > 1) {
+    return interval + " days";
+  }
+  interval = Math.floor(seconds / 3600);
+  if (interval > 1) {
+    return interval + " hours";
+  }
+  interval = Math.floor(seconds / 60);
+  if (interval > 1) {
+    return interval + " minutes";
+  }
+  return Math.floor(seconds) + " seconds";
+};

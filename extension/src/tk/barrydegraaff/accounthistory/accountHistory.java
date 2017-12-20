@@ -25,6 +25,7 @@ import com.zimbra.soap.ZimbraSoapContext;
 import com.zimbra.cs.account.Account;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.util.Map;
 
 import java.text.ParseException;
@@ -126,6 +127,11 @@ public class accountHistory extends DocumentHandler {
             }
             br.close();
             fstream.close();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
+            Element content = response.addUniqueElement("serverMeta");
+            content.addAttribute("time", dateFormat.format(date));
         } catch (Exception e) {
             e.printStackTrace();
         }
