@@ -53,3 +53,11 @@ You can also have the extension read gzipped files (after log rotation), for now
 
     nano /opt/zimbra/lib/ext/accountHistory/config.properties
     audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/audit.log.yyyy-MM-dd.gz
+
+### Un-installing
+
+    rm -Rf /opt/zimbra/lib/ext/accountHistory
+    rm -Rf /opt/zimbra/lib/ext/AccountHistoryAdmin 
+    rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history
+    su - zimbra -c "zmzimletctl undeploy tk_barrydegraaff_accounthistory_admin"
+	[zimbra@server zimbra]$ zmmailboxdctl restart 
