@@ -126,18 +126,11 @@ fi
 echo "Flushing Zimlet Cache."
 su - zimbra -c "zmprov fc all"
 
-set +e
 echo "Updating GeoIP"
-if [[ ! -z $APT_CMD ]]; then
-   cd $TMPFOLDER
-   wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-   gunzip GeoLiteCity.dat.gz
-   mv GeoLiteCity.dat /usr/share/GeoIP/
-else
-   # if no update is found, the script would not continue running in set -e
-   geoipupdate
-fi
-set -e
+cd $TMPFOLDER
+wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+gunzip GeoLiteCity.dat.gz
+mv GeoLiteCity.dat /usr/share/GeoIP/
 
 echo "Restoring config.properties"
 cd $TMPFOLDER/upgrade/
