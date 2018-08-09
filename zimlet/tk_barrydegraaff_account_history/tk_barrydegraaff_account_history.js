@@ -115,6 +115,7 @@ historyZimlet.prototype.displayDialog = function(response) {
       try
       {
          data = response._data.accountHistoryResponse.content;
+         console.log(data);
          length = response._data.accountHistoryResponse.content.length;
          serverTime = Date.parse(response._data.accountHistoryResponse.serverMeta.time.substring(0,19));
          
@@ -129,7 +130,9 @@ historyZimlet.prototype.displayDialog = function(response) {
       var newData = [];
       for(var x=0; x < length; x++)
       {
-         newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
+         var timeMatches = data[x].logEntry.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         var mTime = data[x].logEntry.match(/,[0-9][0-9][0-9]/);
+         newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
       }
       newData.sort();
      // newData.reverse();
@@ -141,7 +144,8 @@ historyZimlet.prototype.displayDialog = function(response) {
       {
          parsed = [];         
          parsed['raw'] = data[x];
-         parsed['date'] = data[x].substring(18,37);
+         var timeMatches = data[x].match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         parsed['date'] = timeMatches[0];
 
          var oip = /oip=.*?;/.exec(data[x]);
          if(oip)
@@ -266,7 +270,7 @@ historyZimlet.prototype.displayDialog = function(response) {
             trclass = 'accountHistory-selected';
          }
          
-         var dateDiff = serverTime - Date.parse(data[x].date.substring(0,19));
+         var dateDiff = serverTime - Date.parse(data[x].date.substring(0,19)); //this is the unix timestamp we already calculated and placed in pos 0-19 so this should be ok always
          tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px' title='"+DOMPurify.sanitize(data[x].date)+"'>"+historyZimlet.prototype.timeSince(dateDiff)+" ago"+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
@@ -399,7 +403,10 @@ historyZimlet.prototype.displayDialogFullLog = function(response) {
       var newData = [];
       for(var x=0; x < length; x++)
       {
-         newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
+         var timeMatches = data[x].logEntry.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         var mTime = data[x].logEntry.match(/,[0-9][0-9][0-9]/);
+         newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
+         
       }
       newData.sort();
       newData.reverse();
@@ -411,7 +418,8 @@ historyZimlet.prototype.displayDialogFullLog = function(response) {
       {
          parsed = [];         
          parsed['raw'] = data[x];
-         parsed['date'] = data[x].substring(18,37);
+         var timeMatches = data[x].match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         parsed['date'] = timeMatches[0];
 
          var oip = /oip=.*?;/.exec(data[x]);
          if(oip)
