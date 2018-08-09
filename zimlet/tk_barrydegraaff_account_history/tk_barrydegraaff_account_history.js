@@ -115,9 +115,13 @@ historyZimlet.prototype.displayDialog = function(response) {
       try
       {
          data = response._data.accountHistoryResponse.content;
-         console.log(data);
          length = response._data.accountHistoryResponse.content.length;
-         serverTime = Date.parse(response._data.accountHistoryResponse.serverMeta.time.substring(0,19));
+                  
+         //https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+         //serverTime = Date.parse(response._data.accountHistoryResponse.serverMeta.time.substring(0,19));
+         var a = response._data.accountHistoryResponse.serverMeta.time.substring(0,19).split(/[^0-9]/);
+         serverTime=new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5]);
+         
          
       }
       catch(err)
@@ -132,7 +136,10 @@ historyZimlet.prototype.displayDialog = function(response) {
       {
          var timeMatches = data[x].logEntry.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
          var mTime = data[x].logEntry.match(/,[0-9][0-9][0-9]/);
-         newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
+         //https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+         //newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
+         var a = timeMatches[0].split(/[^0-9]/);
+         newData.push(+ new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5], mTime[0].substring(1))+" "+data[x].logEntry);      
       }
       newData.sort();
      // newData.reverse();
@@ -271,7 +278,11 @@ historyZimlet.prototype.displayDialog = function(response) {
          }
          
          var timeMatches = data[x].date.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
-         var dateDiff = serverTime - Date.parse(timeMatches[0]);
+
+         //https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+         //Date.parse(timeMatches[0]);
+         var a = timeMatches[0].split(/[^0-9]/);
+         var dateDiff = serverTime - new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5]);
          tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px' title='"+DOMPurify.sanitize(data[x].date)+"'>"+historyZimlet.prototype.timeSince(dateDiff)+" ago"+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
@@ -406,8 +417,10 @@ historyZimlet.prototype.displayDialogFullLog = function(response) {
       {
          var timeMatches = data[x].logEntry.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
          var mTime = data[x].logEntry.match(/,[0-9][0-9][0-9]/);
-         newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
-         
+         //https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+         //newData.push(Date.parse(timeMatches[0])+mTime[0]+" "+data[x].logEntry);
+         var a = timeMatches[0].split(/[^0-9]/);
+         newData.push(+ new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5], mTime[0].substring(1))+" "+data[x].logEntry);
       }
       newData.sort();
       newData.reverse();
