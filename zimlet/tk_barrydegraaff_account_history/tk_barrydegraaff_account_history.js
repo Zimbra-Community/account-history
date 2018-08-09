@@ -270,7 +270,8 @@ historyZimlet.prototype.displayDialog = function(response) {
             trclass = 'accountHistory-selected';
          }
          
-         var dateDiff = serverTime - Date.parse(data[x].date.substring(0,19)); //this is the unix timestamp we already calculated and placed in pos 0-19 so this should be ok always
+         var timeMatches = data[x].date.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         var dateDiff = serverTime - Date.parse(timeMatches[0]);
          tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px' title='"+DOMPurify.sanitize(data[x].date)+"'>"+historyZimlet.prototype.timeSince(dateDiff)+" ago"+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
