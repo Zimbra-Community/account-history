@@ -118,7 +118,12 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
       var newData = [];
       for(var x=0; x < length; x++)
       {
-         newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
+         //https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+         //newData.push(Date.parse(data[x].logEntry.substring(0,19))+","+data[x].logEntry.substring(20,23)+" "+data[x].logEntry);
+         var timeMatches = data[x].logEntry.match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         var mTime = data[x].logEntry.match(/,[0-9][0-9][0-9]/);         
+         var a = timeMatches[0].split(/[^0-9]/);
+         newData.push(+ new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5], mTime[0].substring(1))+" "+data[x].logEntry);          
       }
       newData.sort();
       newData.reverse();
@@ -130,7 +135,8 @@ ZaAccountHistoryTab.prototype.accountHistoryDefaultCallback = function (response
       {
          parsed = [];         
          parsed['raw'] = data[x];
-         parsed['date'] = data[x].substring(18,37);
+         var timeMatches = data[x].match(/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]/);
+         parsed['date'] = timeMatches[0];
 
          var oip = /oip=.*?;/.exec(data[x]);
          if(oip)
