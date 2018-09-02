@@ -301,7 +301,7 @@ historyZimlet.prototype.displayDialog = function(response) {
       });
       var html = '';
       
-      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>When</th><th class='accountHistory-td'>From what IP</th><th class='accountHistory-td'>Form what device or protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
+      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>When</th><th class='accountHistory-td'>From what IP</th><th class='accountHistory-td'>From what device or protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
       
       zimletInstance._dialog.setContent(html);
       
