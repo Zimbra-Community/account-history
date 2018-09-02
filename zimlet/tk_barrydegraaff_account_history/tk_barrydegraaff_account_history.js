@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2017  Barry de Graaff
+ Copyright (C) 2017-2018  Barry de Graaff
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -283,10 +283,19 @@ historyZimlet.prototype.displayDialog = function(response) {
          //Date.parse(timeMatches[0]);
          var a = timeMatches[0].split(/[^0-9]/);
          var dateDiff = serverTime - new Date (a[0],a[1]-1,a[2],a[3],a[4],a[5]);
+         
+         var failedAuth = data[x].raw.match(/invalid password|authentication fail/gm);
+         var failedAuthIcon = "";
+
+         if(failedAuth)
+         {
+            failedAuthIcon = '<div class="ImgWarning" style="float:right" title="Authentication failure"></div>';
+         }
+         
          tableData = tableData + "<tr id='historyZimlet"+rowCount+"' onclick='historyZimlet.prototype.setSelected(\""+data[x].oip+"\",\""+btoa(data[x].raw)+"\",\""+btoa(data[x].ua)+"\",\"historyZimlet"+rowCount+"\")' class='"+trclass+"'>"+
          "<td class='accountHistory-td' style='width:120px' title='"+DOMPurify.sanitize(data[x].date)+"'>"+historyZimlet.prototype.timeSince(dateDiff)+" ago"+"</td>"+
          "<td class='accountHistory-td' style='width:200px'>"+DOMPurify.sanitize(data[x].oip)+"</td>"+
-         "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+"</td>"+
+         "<td class='accountHistory-td' style='width:60px'>"+DOMPurify.sanitize(data[x].protocol)+failedAuthIcon+"</td>"+
          "</td></tr>";
          rowCount++;
       });
