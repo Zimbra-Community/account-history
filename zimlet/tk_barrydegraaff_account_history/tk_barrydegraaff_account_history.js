@@ -362,7 +362,7 @@ historyZimlet.prototype.setSelected = function (ip, raw, ua, domId) {
 }
 
 historyZimlet.prototype.displayIpLookup = function (response) {
-   response = response.    _data.accountHistoryResponse.content[0].geoIpResult;
+   response = response._data.accountHistoryResponse.content[0].geoIpResult;
    response = response.split(", ");
    var OSMBbox = 0.03;
    var minlong = parseFloat(response[7]) - OSMBbox;
