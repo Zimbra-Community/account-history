@@ -52,9 +52,9 @@ set -e
 
 #to-do test Ubuntu
 if [[ ! -z $YUM_CMD ]]; then
-   yum install -y git zip GeoIP
+   yum install -y git zip
 else
-   apt-get install -y git zip geoip-database geoip-bin
+   apt-get install -y git zip
 fi
 
 
@@ -135,7 +135,7 @@ rm -f /opt/GeoIP2-Zimbra/GeoLite2-City.tar.gz
 
 echo "Deploy CLI tools"
 cd $TMPFOLDER
-cp -rv bin/* /usr/local/sbin/
+cp -rv account-history/bin/* /usr/local/sbin/
 
 
 echo "Restoring config.properties"
