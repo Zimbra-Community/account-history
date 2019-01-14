@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="geoip2-2.12.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/geoip2-2.12.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

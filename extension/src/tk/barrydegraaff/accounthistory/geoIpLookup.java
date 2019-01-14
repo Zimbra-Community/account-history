@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2017  Barry de Graaff
+Copyright (C) 2017-2019  Barry de Graaff
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,56 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 
 See also:
-//http://www.programcreek.com/java-api-examples/index.php?source_dir=kraken-master/kraken-generic/src/main/java/org/wikimedia/analytics/kraken/geo/GeoIpLookup.java
-
+https://github.com/maxmind/GeoIP2-java
 */
 package tk.barrydegraaff.accounthistory;
 
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.Location;
+
+import java.io.File;
+import java.net.InetAddress;
 
 public class geoIpLookup {
 
-    private static final Pattern IP4PATTERN = Pattern.compile("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
-    private static final Pattern IP6PATTERN = Pattern.compile("^(?:[0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}(?::(?:[0-9]{1,3}\\.){3}[0-9]{1,3})*$");
-
     public String doIPGeoLookup(String ip) {
 
-        Matcher ip4 = IP4PATTERN.matcher(ip);
-        if (ip4.matches()) {
-            return runCommand("/usr/bin/geoiplookup", "-f", "/usr/share/GeoIP/GeoLiteCity.dat", ip);
-        }
-        Matcher ip6 = IP6PATTERN.matcher(ip);
-        if (ip6.matches()) {
-            return runCommand("/usr/bin/geoiplookup6", "-f", "/usr/share/GeoIP/GeoLiteCountry.dat", ip);
-        }
-        return "";
-
-    }
-
-    private String runCommand(String cmd, String arg1, String arg2, String arg3) {
         try {
-            ProcessBuilder pb = new ProcessBuilder()
-                    .command(cmd, arg1, arg2, arg3)
-                    .redirectErrorStream(true);
-            Process p = pb.start();
+            // A File object pointing to your GeoIP2 or GeoLite2 database
+            File database = new File("/opt/GeoIP2-Zimbra/GeoLite2-City.mmdb");
 
-            BufferedReader cmdOutputBuffer = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            // This creates the DatabaseReader object. To improve performance, reuse
+            // the object across lookups. The object is thread-safe.
+            DatabaseReader reader = new DatabaseReader.Builder(database).build();
 
-            StringBuilder builder = new StringBuilder();
-            String aux = "";
-            while ((aux = cmdOutputBuffer.readLine()) != null) {
-                builder.append(aux);
-                builder.append(';');
-            }
-            String cmdResult = builder.toString();
-            return cmdResult;
+            InetAddress ipAddress = InetAddress.getByName(ip);
 
+            // Replace "city" with the appropriate method for your database, e.g.,
+            // "country".
+            CityResponse response = reader.city(ipAddress);
+
+            Location location = response.getLocation();
+            return (" , , , , , , " + location.getLatitude() + ", " + location.getLongitude());
         } catch (Exception e) {
-            System.out.print(e.toString());
-            return e.toString();
+            e.printStackTrace();
+            return "";
         }
     }
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2017  Barry de Graaff
+# Copyright (C) 2017-2019  Barry de Graaff
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,13 +18,8 @@
 # We only support java versions bundled with Zimbra
 if [[ -x "/opt/zimbra/common/bin/java" ]]
 then
-   #8.7
+   #8.7+
     [[ ":$PATH:" != *":/opt/zimbra/common/bin:"* ]] && PATH="/opt/zimbra/common/bin:${PATH}"
-    export PATH
-elif  [[ -x "/opt/zimbra/java/bin/java" ]]
-then
-    #8.6
-    [[ ":$PATH:" != *":/opt/zimbra/java/bin:"* ]] && PATH="/opt/zimbra/java/bin:${PATH}"
     export PATH
 else
     echo "Java is not found in /opt/zimbra"
@@ -101,6 +96,8 @@ else
    echo "Deploy client extension"
    cd $TMPFOLDER
    cp account-history/extension/out/artifacts/accountHistory_jar/accountHistory.jar /opt/zimbra/lib/ext/accountHistory/accountHistory.jar
+   cp account-history/extension/lib/maxmind-db-1.2.2.jar /opt/zimbra/lib/ext/accountHistory/maxmind-db-1.2.2.jar
+   cp account-history/extension/lib/geoip2-2.12.0.jar /opt/zimbra/lib/ext/accountHistory/geoip2-2.12.0.jar
 fi
 
 echo "Installing Admin Zimlet."
@@ -121,16 +118,25 @@ else
    mkdir -p /opt/zimbra/lib/ext/AccountHistoryAdmin
    cd $TMPFOLDER
    cp account-history/adminExtension/out/artifacts/AccountHistoryAdmin/AccountHistoryAdmin.jar /opt/zimbra/lib/ext/AccountHistoryAdmin/AccountHistoryAdmin.jar
+   cp account-history/extension/lib/maxmind-db-1.2.2.jar /opt/zimbra/lib/ext/AccountHistoryAdmin/maxmind-db-1.2.2.jar
+   cp account-history/extension/lib/geoip2-2.12.0.jar /opt/zimbra/lib/ext/AccountHistoryAdmin/geoip2-2.12.0.jar
 fi
 
 echo "Flushing Zimlet Cache."
 su - zimbra -c "zmprov fc all"
 
-echo "Updating GeoIP"
+echo "Installing/updating GeoIP2"
+rm -Rf /opt/GeoIP2-Zimbra
+mkdir /opt/GeoIP2-Zimbra
+cd /opt/GeoIP2-Zimbra
+wget https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+tar --strip-components 1 -xvf GeoLite2-City.tar.gz
+rm -f /opt/GeoIP2-Zimbra/GeoLite2-City.tar.gz
+
+echo "Deploy CLI tools"
 cd $TMPFOLDER
-wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-gunzip GeoLiteCity.dat.gz
-mv GeoLiteCity.dat /usr/share/GeoIP/
+cp -rv bin/* /usr/local/sbin/
+
 
 echo "Restoring config.properties"
 cd $TMPFOLDER/upgrade/
@@ -147,3 +153,6 @@ echo "su - zimbra -c \"zmmailboxdctl restart\""
 echo " "
 echo "Do you only see internal or blank IP's? check:"
 echo " https://github.com/Zimbra-Community/account-history#log-external-ip"
+echo " "
+echo "GeoIP2 database is not updated periodically, while the installer updated it just now, you can update it in the future by running:"
+echo " /usr/local/sbin/geoip2-zimbra-update.sh"

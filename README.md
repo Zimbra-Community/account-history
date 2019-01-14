@@ -61,3 +61,7 @@ You can also have the extension read gzipped files (after log rotation), for now
     rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history
     su - zimbra -c "zmzimletctl undeploy tk_barrydegraaff_accounthistory_admin"
 	[zimbra@server zimbra]$ zmmailboxdctl restart 
+
+========================================================================
+
+A Zeta Alliance Zimlet https://zetalliance.org
