@@ -6,7 +6,7 @@ If you find Zimbra Recent Account Activity useful and want to support its contin
 - PayPal: info@barrydegraaff.tk
 - Bank transfer: IBAN NL55ABNA0623226413 ; BIC ABNANL2A
 
-Designed for Zimbra version 8.7/8.8.
+Supported Zimbra version 8.8.11.
 
 Bugs and feedback: https://github.com/Zimbra-Community/account-history/issues
 
