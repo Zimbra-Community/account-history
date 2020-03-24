@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2017-2018  Barry de Graaff
+ Copyright (C) 2017-2020  Barry de Graaff
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -310,7 +310,7 @@ historyZimlet.prototype.displayDialog = function(response) {
       });
       var html = '';
       
-      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>When</th><th class='accountHistory-td'>From what IP</th><th class='accountHistory-td'>From what device or protocol</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
+      html = "<div style='width:800px; height: 600px;'><table id='historyZimletTable'><thead><tr class='accountHistory-odd'><th class='accountHistory-td'>When</th><th class='accountHistory-td'>From what IP</th><th class='accountHistory-td'>Type</th></tr></thead>"+tableData+"</table><div id='historyZimletDetails'></div>";
       
       zimletInstance._dialog.setContent(html);
       
