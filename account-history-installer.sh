@@ -75,7 +75,7 @@ rm -Rf /opt/zimbra/lib/ext/accountHistory
 rm -Rf /opt/zimbra/lib/ext/AccountHistoryAdmin
 rm -Rf /opt/zimbra/zimlets-deployed/_dev/tk_barrydegraaff_account_history  
 mkdir -p /opt/zimbra/lib/ext/accountHistory
-echo "audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/sync.log;/opt/zimbra/log/audit.log.yyyy-MM-dd.gz;/opt/zimbra/log/sync.log.yyyy-MM-dd.gz" > /opt/zimbra/lib/ext/accountHistory/config.properties
+echo "audit_logs=/opt/zimbra/log/audit.log;/opt/zimbra/log/audit.log.yyyy-MM-dd.gz" > /opt/zimbra/lib/ext/accountHistory/config.properties
 
 cd $TMPFOLDER
 git clone --depth=1 https://github.com/Zimbra-Community/account-history
