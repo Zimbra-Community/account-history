@@ -1,4 +1,4 @@
-Zimbra Recent Account Activity (beta)
+Zimbra Recent Account Activity
 ==========
 A Zimbra extension that allows the user to monitor their recent login and account activity. This is important to keep the user's account safe.
 
@@ -6,7 +6,7 @@ If you find Zimbra Recent Account Activity useful and want to support its contin
 - PayPal: info@barrydegraaff.tk
 - Bank transfer: IBAN NL55ABNA0623226413 ; BIC ABNANL2A
 
-Supported Zimbra version 8.8.11.
+Supported Zimbra version 8.8.15.
 
 Bugs and feedback: https://github.com/Zimbra-Community/account-history/issues
 
