@@ -42,6 +42,12 @@ If you only see internal IP's in the account history, you need to configure Zimb
     zmprov mcf +zimbraMailTrustedIP <proxy ip here>
     zmprov mcf +zimbraMailTrustedIP <more proxy here>
     
+### GeoIP database
+The GeoIP database has A LOT of rate limiting nowadays, so check if yours was initialized by running:
+
+    /usr/local/sbin/geoip2-zimbra-update.sh
+
+
 
 ### Configuring preferences
 Support a semi-colon separated list of log files, only the audit.og log4j format is supported.
