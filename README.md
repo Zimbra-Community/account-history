@@ -6,8 +6,6 @@ Supported Zimbra version 8.8.15.
 
 Bugs and feedback: https://github.com/Zimbra-Community/account-history/issues
 
-Report security issues to info@barrydegraaff.tk (PGP fingerprint: 97f4694a1d9aedad012533db725ddd156d36a2d0)
-
 ========================================================================
 
 ### Installing
