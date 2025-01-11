@@ -1,5 +1,6 @@
-Zimbra Recent Account Activity
+~Zimbra Recent Account Activity~
 ==========
+**This Zimlet is deprecated and will not be supported** 
 A Zimbra extension that allows the user to monitor their recent login and account activity. This is important to keep the user's account safe.
 
 Supported Zimbra version 8.8.15.
